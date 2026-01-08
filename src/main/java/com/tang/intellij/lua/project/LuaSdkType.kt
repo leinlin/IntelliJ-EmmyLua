@@ -41,7 +41,7 @@ class LuaSdkType : SdkType("Lua SDK") {
     override fun getVersionString(sdk: Sdk) = "1.0"
 
     override fun createAdditionalDataConfigurable(sdkModel: SdkModel, sdkModificator: SdkModificator): AdditionalDataConfigurable? =
-            null
+        null
 
     override fun getPresentableName() = "Lua SDK"
 
@@ -50,8 +50,6 @@ class LuaSdkType : SdkType("Lua SDK") {
     }
 
     override fun getIcon(): Icon = LuaIcons.FILE
-
-    override fun getIconForAddAction(): Icon = LuaIcons.FILE
 
     companion object {
         val instance: LuaSdkType

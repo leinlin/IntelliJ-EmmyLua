@@ -2,7 +2,8 @@ name: Build Plugin
 
 on:
   push:
-    branches: *
+    branches:
+      - '*'
 #  pull_request:
 #    branches: [ "master" ]
 
@@ -16,7 +17,7 @@ jobs:
 
     env:
       CI: true
-      CI_BUILD_VERSION: 1.3.7.${{ github.run_number }}
+      CI_BUILD_VERSION: 1.4.0.${{ github.run_number }}
 
     steps:
       - name: Checkout
@@ -28,13 +29,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Build 2023.1-EAP
+      - name: Build 2025.3
         env:
-          IDEA_VER: 231
+          IDEA_VER: 245
         run: ./gradlew buildPlugin
 
       - name: Upload artifact
-        uses: actions/upload-artifact@v3.1.0
+        uses: actions/upload-artifact@v4
         with:
           name: v${{ env.CI_BUILD_VERSION }}
           path: build/distributions/*.zip

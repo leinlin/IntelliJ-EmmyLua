@@ -31,12 +31,6 @@ public class LuaBundle {
         return CommonBundle.message(getBundle(), key, params);
     }
 
-    @Nullable
-    public static String messageOfNull(@NotNull @PropertyKey(resourceBundle = BUNDLE) String key,
-                                       @NotNull Object... params) {
-        return CommonBundle.messageOfNull(getBundle(), key, params);
-    }
-
     private static Reference<ResourceBundle> ourBundle;
     @NonNls
     private static final String BUNDLE = "LuaBundle";

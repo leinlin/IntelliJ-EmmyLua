@@ -62,9 +62,9 @@ class LuaCallHierarchyBrowser(element: PsiElement) : CallHierarchyBrowserBase(el
     }
 
     override fun createHierarchyTreeStructure(typeName: String, psiElement: PsiElement): HierarchyTreeStructure? =
-            when (typeName) {
-                getCallerType() -> LuaCallerFunctionTreeStructure(myProject, psiElement)
-                getCallerType() -> LuaCalleeFunctionTreeStructure(myProject, psiElement)
-                else -> null
-            }
+        when (typeName) {
+            getCallerType() -> LuaCallerFunctionTreeStructure(myProject, psiElement)
+            getCallerType() -> LuaCalleeFunctionTreeStructure(myProject, psiElement)
+            else -> null
+        }
 }

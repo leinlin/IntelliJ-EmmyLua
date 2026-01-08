@@ -17,6 +17,7 @@
 package com.tang.intellij.lua.project
 
 import com.intellij.openapi.components.PersistentStateComponent
+import com.intellij.openapi.components.Service
 import com.intellij.openapi.components.State
 import com.intellij.openapi.components.Storage
 import com.intellij.openapi.module.ModuleManager
@@ -31,13 +32,14 @@ interface LuaSourceRootListener {
     fun onChanged()
 }
 
+@Service(Service.Level.PROJECT)
 @State(name = "LuaSourceRootManager", storages = [(Storage("emmy.xml"))])
 class LuaSourceRootManager(val project: Project) : PersistentStateComponent<LuaSourceRootManager.State> {
     companion object {
         val TOPIC: Topic<LuaSourceRootListener> = Topic.create("lua project source root changes", LuaSourceRootListener::class.java)
 
         fun getInstance(project: Project): LuaSourceRootManager {
-            return project.getComponent(LuaSourceRootManager::class.java)
+            return project.getService(LuaSourceRootManager::class.java)
         }
     }
 

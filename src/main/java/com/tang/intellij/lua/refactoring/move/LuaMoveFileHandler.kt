@@ -60,7 +60,7 @@ class LuaMoveFileHandler : MoveFileHandler() {
         return usages
     }
 
-    override fun retargetUsages(usageInfos: MutableList<UsageInfo>, oldToNewMap: MutableMap<PsiElement, PsiElement>) {
+    override fun retargetUsages(usageInfos: MutableList<out UsageInfo>, oldToNewMap: MutableMap<PsiElement, PsiElement>) {
         for (usageInfo in usageInfos) {
             val reference = usageInfo.reference
             if (reference is LuaRequireReference) {

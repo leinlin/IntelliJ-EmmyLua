@@ -70,21 +70,17 @@ class LuaParserDefinition : ParserDefinition {
         return LuaPsiFile(viewProvider)
     }
 
-    override fun spaceExistanceTypeBetweenTokens(left: ASTNode, right: ASTNode): ParserDefinition.SpaceRequirements {
-        return ParserDefinition.SpaceRequirements.MAY
-    }
-
     override fun createElement(node: ASTNode): PsiElement {
         val type = node.elementType
         if (type === LuaElementType.DOC_COMMENT)
             return LuaCommentImpl(node)
         return if (type is LuaDocElementType
-                || type === LuaElementType.DOC_TABLE_DEF
-                || type === LuaElementType.DOC_TABLE_FIELD_DEF
-                || type === LuaElementType.CLASS_DEF
-                || type === LuaElementType.CLASS_FIELD_DEF
-                || type === LuaElementType.TYPE_DEF
-                || type === LuaElementType.DOC_ALIAS) {
+            || type === LuaElementType.DOC_TABLE_DEF
+            || type === LuaElementType.DOC_TABLE_FIELD_DEF
+            || type === LuaElementType.CLASS_DEF
+            || type === LuaElementType.CLASS_FIELD_DEF
+            || type === LuaElementType.TYPE_DEF
+            || type === LuaElementType.DOC_ALIAS) {
             LuaDocTypes.Factory.createElement(node)
         } else LuaTypes.Factory.createElement(node)
     }
@@ -92,73 +88,73 @@ class LuaParserDefinition : ParserDefinition {
     companion object {
         val WHITE_SPACES = TokenSet.create(TokenType.WHITE_SPACE)
         val COMMENTS = TokenSet.create(
-                LuaTypes.SHORT_COMMENT,
-                LuaTypes.BLOCK_COMMENT,
-                LuaTypes.DOC_COMMENT,
-                LuaTypes.REGION,
-                LuaTypes.ENDREGION
+            LuaTypes.SHORT_COMMENT,
+            LuaTypes.BLOCK_COMMENT,
+            LuaTypes.DOC_COMMENT,
+            LuaTypes.REGION,
+            LuaTypes.ENDREGION
         )
         val STRINGS = TokenSet.create(LuaTypes.STRING)
         val KEYWORD_TOKENS = TokenSet.create(
-                LuaTypes.AND,
-                LuaTypes.BREAK,
-                LuaTypes.DO,
-                LuaTypes.ELSE,
-                LuaTypes.ELSEIF,
-                LuaTypes.END,
-                LuaTypes.FOR,
-                LuaTypes.FUNCTION,
-                LuaTypes.IF,
-                LuaTypes.IN,
-                LuaTypes.LOCAL,
-                LuaTypes.NOT,
-                LuaTypes.OR,
-                LuaTypes.REPEAT,
-                LuaTypes.RETURN,
-                LuaTypes.THEN,
-                LuaTypes.UNTIL,
-                LuaTypes.WHILE,
+            LuaTypes.AND,
+            LuaTypes.BREAK,
+            LuaTypes.DO,
+            LuaTypes.ELSE,
+            LuaTypes.ELSEIF,
+            LuaTypes.END,
+            LuaTypes.FOR,
+            LuaTypes.FUNCTION,
+            LuaTypes.IF,
+            LuaTypes.IN,
+            LuaTypes.LOCAL,
+            LuaTypes.NOT,
+            LuaTypes.OR,
+            LuaTypes.REPEAT,
+            LuaTypes.RETURN,
+            LuaTypes.THEN,
+            LuaTypes.UNTIL,
+            LuaTypes.WHILE,
 
-                //lua5.3
-                LuaTypes.DOUBLE_COLON,
-                LuaTypes.GOTO
+            //lua5.3
+            LuaTypes.DOUBLE_COLON,
+            LuaTypes.GOTO
         )
         val LUA52_BIN_OP_SET = TokenSet.create(
-                LuaTypes.BIT_AND,
-                LuaTypes.BIT_LTLT,
-                LuaTypes.BIT_OR,
-                LuaTypes.BIT_RTRT,
-                LuaTypes.BIT_TILDE,
-                LuaTypes.DOUBLE_DIV
+            LuaTypes.BIT_AND,
+            LuaTypes.BIT_LTLT,
+            LuaTypes.BIT_OR,
+            LuaTypes.BIT_RTRT,
+            LuaTypes.BIT_TILDE,
+            LuaTypes.DOUBLE_DIV
         )
         val LUA52_UNARY_OP_SET = TokenSet.create(
-                LuaTypes.BIT_TILDE
+            LuaTypes.BIT_TILDE
         )
         val PRIMITIVE_TYPE_SET = TokenSet.create(
-                LuaTypes.FALSE,
-                LuaTypes.NIL,
-                LuaTypes.TRUE
+            LuaTypes.FALSE,
+            LuaTypes.NIL,
+            LuaTypes.TRUE
         )
         val DOC_TAG_TOKENS = TokenSet.create(
-                LuaDocTypes.TAG_NAME_PARAM,
-                LuaDocTypes.TAG_NAME_RETURN,
-                LuaDocTypes.TAG_NAME_CLASS,
-                LuaDocTypes.TAG_NAME_MODULE,
-                LuaDocTypes.TAG_NAME_TYPE,
-                LuaDocTypes.TAG_NAME_FIELD,
-                LuaDocTypes.TAG_NAME_LANGUAGE,
-                LuaDocTypes.TAG_NAME_OVERLOAD,
-                LuaDocTypes.TAG_NAME_PRIVATE,
-                LuaDocTypes.TAG_NAME_PROTECTED,
-                LuaDocTypes.TAG_NAME_PUBLIC,
-                LuaDocTypes.TAG_NAME_SEE,
-                LuaDocTypes.TAG_NAME_GENERIC,
-                LuaDocTypes.TAG_NAME_VARARG,
-                LuaDocTypes.TAG_NAME_ALIAS
+            LuaDocTypes.TAG_NAME_PARAM,
+            LuaDocTypes.TAG_NAME_RETURN,
+            LuaDocTypes.TAG_NAME_CLASS,
+            LuaDocTypes.TAG_NAME_MODULE,
+            LuaDocTypes.TAG_NAME_TYPE,
+            LuaDocTypes.TAG_NAME_FIELD,
+            LuaDocTypes.TAG_NAME_LANGUAGE,
+            LuaDocTypes.TAG_NAME_OVERLOAD,
+            LuaDocTypes.TAG_NAME_PRIVATE,
+            LuaDocTypes.TAG_NAME_PROTECTED,
+            LuaDocTypes.TAG_NAME_PUBLIC,
+            LuaDocTypes.TAG_NAME_SEE,
+            LuaDocTypes.TAG_NAME_GENERIC,
+            LuaDocTypes.TAG_NAME_VARARG,
+            LuaDocTypes.TAG_NAME_ALIAS
         )
         val DOC_KEYWORD_TOKENS = TokenSet.create(
-                LuaDocTypes.FUN,
-                LuaDocTypes.VARARG
+            LuaDocTypes.FUN,
+            LuaDocTypes.VARARG
         )
         val FILE = LuaFileElementType()
     }

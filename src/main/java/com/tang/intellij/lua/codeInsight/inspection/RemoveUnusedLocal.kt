@@ -23,6 +23,7 @@ import com.intellij.openapi.util.TextRange
 import com.intellij.psi.PsiElementVisitor
 import com.intellij.psi.search.searches.ReferencesSearch
 import com.intellij.refactoring.RefactoringFactory
+import com.intellij.util.Processor
 import com.tang.intellij.lua.Constants
 import com.tang.intellij.lua.comment.psi.LuaDocPsiElement
 import com.tang.intellij.lua.psi.LuaLocalDef
@@ -44,17 +45,17 @@ class RemoveUnusedLocal : LocalInspectionTool() {
                     return
                 val search = ReferencesSearch.search(o, o.useScope)
                 var found = false
-                for (reference in search) {
+                search.forEach(Processor { reference ->
                     if (reference.element !is LuaDocPsiElement) {
                         found = true
-                        break
                     }
-                }
+                    !found
+                })
                 if (!found) {
                     holder.registerProblem(o,
-                            "Unused parameter : '${o.name}'",
-                            ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                            RenameToUnderlineFix())
+                        "Unused parameter : '${o.name}'",
+                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                        RenameToUnderlineFix())
                 }
             }
 
@@ -68,16 +69,16 @@ class RemoveUnusedLocal : LocalInspectionTool() {
                                 val offset = name.node.startOffset - o.node.startOffset
                                 val textRange = TextRange(offset, offset + name.textLength)
                                 holder.registerProblem(o,
-                                        "Unused local : '${name.text}'",
-                                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                                        textRange,
-                                        RemoveFix("Remove unused local '${name.text}'"),
-                                        RenameToUnderlineFix())
+                                    "Unused local : '${name.text}'",
+                                    ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                                    textRange,
+                                    RemoveFix("Remove unused local '${name.text}'"),
+                                    RenameToUnderlineFix())
                             } else {
                                 holder.registerProblem(name,
-                                        "Unused local : '${name.text}'",
-                                        ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                                        RenameToUnderlineFix())
+                                    "Unused local : '${name.text}'",
+                                    ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                                    RenameToUnderlineFix())
                             }
                         }
                     }
@@ -94,10 +95,10 @@ class RemoveUnusedLocal : LocalInspectionTool() {
                         val textRange = TextRange(offset, offset + name.textLength)
 
                         holder.registerProblem(o,
-                                "Unused local function : '${name.text}'",
-                                ProblemHighlightType.LIKE_UNUSED_SYMBOL,
-                                textRange,
-                                RemoveFix("Remove unused local function : '${name.text}'"))
+                            "Unused local function : '${name.text}'",
+                            ProblemHighlightType.LIKE_UNUSED_SYMBOL,
+                            textRange,
+                            RemoveFix("Remove unused local function : '${name.text}'"))
                     }
                 }
             }
