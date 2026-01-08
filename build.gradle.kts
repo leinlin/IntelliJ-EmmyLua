@@ -94,11 +94,11 @@ fun getRev(): String {
 
 task("downloadEmmyDebugger", type = Download::class) {
     src(arrayOf(
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-arm64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/linux-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x86.zip"
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-arm64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/linux-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x86.zip"
     ))
 
     dest("temp")
