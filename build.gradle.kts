@@ -14,17 +14,13 @@
  * limitations under the License.
  */
 
-import de.undercouch.gradle.tasks.download.Download
+import de.undercouch.gradle.tasks.download.*
 import org.apache.tools.ant.taskdefs.condition.Os
-import org.jetbrains.intellij.platform.gradle.tasks.PrepareSandboxTask
-import org.jetbrains.kotlin.gradle.dsl.JvmTarget
 import java.io.ByteArrayOutputStream
-import kotlin.text.get
-import kotlin.text.set
 
 plugins {
-    id("org.jetbrains.intellij.platform") version "2.7.0"
-    id("org.jetbrains.kotlin.jvm").version("2.1.0")
+    id("org.jetbrains.intellij").version("1.13.3")
+    id("org.jetbrains.kotlin.jvm").version("1.8.21")
     id("de.undercouch.download").version("5.3.0")
 }
 
@@ -45,10 +41,10 @@ data class BuildData(
 
 val buildDataList = listOf(
     BuildData(
-        ideaSDKShortVersion = "2025.2",
-        ideaSDKVersion = "252.23892.409",
-        sinceBuild = "252",
-        untilBuild = "252.*",
+        ideaSDKShortVersion = "2024.3",
+        ideaSDKVersion = "243.21565.193",
+        sinceBuild = "243",
+        untilBuild = "243.*",
         bunch = "212",
         targetCompatibilityLevel = JavaVersion.VERSION_17,
         jvmTarget = "17"
@@ -94,11 +90,11 @@ fun getRev(): String {
 
 task("downloadEmmyDebugger", type = Download::class) {
     src(arrayOf(
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-arm64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/linux-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x64.zip",
-        "https://github.com/leinlin/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x86.zip"
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-arm64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/darwin-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/linux-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x64.zip",
+        "https://github.com/EmmyLua/EmmyLuaDebugger/releases/download/${emmyDebuggerVersion}/win32-x86.zip"
     ))
 
     dest("temp")
@@ -151,11 +147,8 @@ task("installEmmyDebugger", type = Copy::class) {
 
 project(":") {
     repositories {
+        maven(url = "https://www.jetbrains.com/intellij-repository/releases")
         mavenCentral()
-        intellijPlatform {
-            defaultRepositories()
-            marketplace()
-        }
     }
 
     dependencies {
@@ -165,10 +158,6 @@ project(":") {
         implementation("org.luaj:luaj-jse:3.0.1")
         implementation("org.eclipse.mylyn.github:org.eclipse.egit.github.core:2.1.5")
         implementation("com.jgoodies:forms:1.2.1")
-        intellijPlatform {
-            intellijIdeaCommunity(buildVersionData.ideaSDKShortVersion)
-            //bundledModule("intellij.spellchecker")
-        }
     }
 
     sourceSets {
@@ -184,24 +173,28 @@ project(":") {
         targetCompatibility = buildVersionData.targetCompatibilityLevel
     }*/
 
-    intellijPlatform {
-        version = version
-        sandboxContainer.set(layout.buildDirectory.dir("${buildVersionData.ideaSDKShortVersion}/idea-sandbox"))
+    intellij {
+        type.set("IC")
+        updateSinceUntilBuild.set(false)
+        downloadSources.set(!isCI)
+        version.set(buildVersionData.ideaSDKVersion)
+        //localPath.set(System.getenv("IDEA_HOME_${buildVersionData.ideaSDKShortVersion}"))
+        sandboxDir.set("${project.buildDir}/${buildVersionData.ideaSDKShortVersion}/idea-sandbox")
     }
 
     task("bunch") {
         doLast {
             val rev = getRev()
             // reset
-            exec {
-                executable = "git"
-                args("reset", "HEAD", "--hard")
-            }
+            //exec {
+            //executable = "git"
+            //args("reset", "HEAD", "--hard")
+            //}
             // clean untracked files
-            exec {
-                executable = "git"
-                args("clean", "-d", "-f")
-            }
+            //exec {
+            //executable = "git"
+            //args("clean", "-d", "-f")
+            //}
             // switch
             exec {
                 executable = if (isWin) "bunch/bin/bunch.bat" else "bunch/bin/bunch"
@@ -224,27 +217,26 @@ project(":") {
             }
         }
 
-        processResources {
-            dependsOn("installEmmyDebugger")
-        }
-
         compileKotlin {
-            compilerOptions {
-                jvmTarget.set(JvmTarget.fromTarget(buildVersionData.jvmTarget))
+            kotlinOptions {
+                jvmTarget = buildVersionData.jvmTarget
             }
         }
 
         patchPluginXml {
-            dependsOn("installEmmyDebugger")
             sinceBuild.set(buildVersionData.sinceBuild)
             untilBuild.set(buildVersionData.untilBuild)
         }
+
+        //instrumentCode {
+        //    compilerVersion.set(buildVersionData.instrumentCodeCompilerVersion)
+        //}
 
         publishPlugin {
             token.set(System.getenv("IDEA_PUBLISH_TOKEN"))
         }
 
-        withType<PrepareSandboxTask> {
+        withType<org.jetbrains.intellij.tasks.PrepareSandboxTask> {
             doLast {
                 copy {
                     from("src/main/resources/std")
